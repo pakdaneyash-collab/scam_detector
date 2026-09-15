@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Scam & Fraud Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">🛡️ ScamShield AI</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/examples">Examples</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>AI-Powered Scam &amp; Fraud Detector</h1>
+    <p class="subtitle">
+      Paste any SMS, WhatsApp message, or email below.<br/>
+      Our AI engine will analyze it for scam patterns instantly.
+    </p>
+  </section>
+
+  <!-- MAIN FORM -->
+  <main class="container">
+
+    {% if error %}
+    <div class="alert alert-error">⚠️ {{ error }}</div>
+    {% endif %}
+
+    <div class="card">
+      <h2>📨 Analyze a Message or Email</h2>
+
+      <form action="/analyze" method="POST" id="analyzeForm">
+
+        <input type="hidden" name="message_type" value="message"/>
+
+        <!-- Message Input -->
+        <div class="form-group">
+          <label class="form-label" for="message">Paste your message here</label>
+          <textarea
+            id="message"
+            name="message"
+            class="textarea"
+            rows="8"
+            placeholder="e.g. Congratulations! You have won ₹10,00,000. Click here to claim your prize now..."
+            required
+          ></textarea>
+          <div class="char-count"><span id="charCount">0</span> characters</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          🔍 Analyze with AI
+        </button>
+
+      </form>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="card info-card">
+      <h2>🧠 How the AI Works</h2>
+      <div class="ai-steps">
+        <div class="ai-step">
+          <div class="step-icon">1</div>
+          <div>
+            <strong>NLP Preprocessing</strong>
+            <p>Text is normalized and tokenized using Natural Language Processing.</p>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-icon">2</div>
+          <div>
+            <strong>Feature Extraction</strong>
+            <p>URLs, urgency signals (CAPS, !!!), and suspicious patterns are extracted.</p>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-icon">3</div>
+          <div>
+            <strong>Weighted Keyword Scoring</strong>
+            <p>Keywords are matched and assigned risk weights (HIGH=3, MED=2, LOW=1).</p>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-icon">4</div>
+          <div>
+            <strong>Multi-Class Classification</strong>
+            <p>The scam type is identified: Phishing, Lottery, Financial, Job Scam, etc.</p>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-icon">5</div>
+          <div>
+            <strong>Sigmoid Confidence Score</strong>
+            <p>A sigmoid function converts the raw score into a 0–100% confidence rating.</p>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-icon">6</div>
+          <div>
+            <strong>Explainable AI (XAI)</strong>
+            <p>Every decision is explained in plain language so you understand why it was flagged.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>🛡️ ScamShield AI — Built with Python, Flask &amp; NLP &nbsp;|&nbsp; For educational purposes</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

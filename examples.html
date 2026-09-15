@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Example Scams — ScamShield AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">🛡️ ScamShield AI</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/examples">Examples</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>📚 Example Scam Messages</h1>
+    <p class="subtitle">Click "Analyze" on any example to see how the AI detects it.</p>
+  </section>
+
+  <main class="container">
+    {% for sample in samples %}
+    <div class="card example-card">
+      <div class="example-header">
+        <h3>{{ sample.title }}</h3>
+      </div>
+      <p class="example-msg">{{ sample.message }}</p>
+      <form action="/analyze" method="POST">
+        <input type="hidden" name="message" value="{{ sample.message }}"/>
+        <input type="hidden" name="message_type" value="message"/>
+        <button type="submit" class="btn btn-primary">🔍 Analyze This</button>
+      </form>
+    </div>
+    {% endfor %}
+  </main>
+
+  <footer class="footer">
+    <p>🛡️ ScamShield AI — Built with Python, Flask &amp; NLP &nbsp;|&nbsp; For educational purposes</p>
+  </footer>
+
+</body>
+</html>

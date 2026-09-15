@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analysis Result — ScamShield AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">🛡️ ScamShield AI</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/examples">Examples</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- RISK VERDICT BANNER -->
+    <div class="verdict-banner" style="border-color: {{ result.risk_color }}; background: {{ result.risk_color }}18;">
+      <div class="verdict-icon">{{ result.risk_icon }}</div>
+      <div class="verdict-info">
+        <div class="verdict-level" style="color: {{ result.risk_color }};">
+          {{ result.risk_level }} RISK
+        </div>
+        <div class="verdict-type">Message Analysis</div>
+      </div>
+      <div class="verdict-confidence">
+        <div class="conf-value" style="color: {{ result.risk_color }};">{{ result.confidence }}%</div>
+        <div class="conf-label">Scam Confidence</div>
+      </div>
+    </div>
+
+    <!-- SCORE BREAKDOWN -->
+    <div class="card">
+      <h2>📊 AI Score Breakdown</h2>
+      <div class="score-grid">
+        <div class="score-item">
+          <div class="score-num high-color">{{ result.base_score }}</div>
+          <div class="score-desc">Keyword Score</div>
+        </div>
+        <div class="score-item">
+          <div class="score-num url-color">{{ result.url_score }}</div>
+          <div class="score-desc">URL Score</div>
+        </div>
+        <div class="score-item">
+          <div class="score-num urgency-color">{{ result.urgency_score }}</div>
+          <div class="score-desc">Urgency Score</div>
+        </div>
+        <div class="score-item">
+          <div class="score-num total-color">{{ result.total_score }}</div>
+          <div class="score-desc">Total Score</div>
+        </div>
+      </div>
+
+      <!-- Confidence Bar -->
+      <div class="conf-bar-label">Scam Confidence: {{ result.confidence }}%</div>
+      <div class="conf-bar-outer">
+        <div class="conf-bar-inner"
+             style="width: {{ result.confidence }}%; background: {{ result.risk_color }};">
+        </div>
+      </div>
+    </div>
+
+    <!-- SCAM CATEGORIES -->
+    <div class="card">
+      <h2>📂 Detected Scam Type(s)</h2>
+      <div class="tags">
+        {% for t in result.scam_types %}
+        <span class="tag" style="background: {{ result.risk_color }}22; color: {{ result.risk_color }}; border-color: {{ result.risk_color }}55;">
+          {{ t }}
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- EXPLAINABLE AI — WHY THIS WAS FLAGGED -->
+    <div class="card">
+      <h2>🧠 Why the AI Flagged This (Explainable AI)</h2>
+      <ul class="explanation-list">
+        {% for reason in result.explanations %}
+        <li>{{ reason }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- MATCHED KEYWORDS -->
+    <div class="card">
+      <h2>🔑 Matched Keywords</h2>
+
+      {% if result.matched_high %}
+      <div class="kw-section">
+        <div class="kw-label high-label">🔴 HIGH RISK (×3 pts each)</div>
+        <div class="tags">
+          {% for kw in result.matched_high %}
+          <span class="tag tag-high">{{ kw }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if result.matched_medium %}
+      <div class="kw-section">
+        <div class="kw-label med-label">🟠 MEDIUM RISK (×2 pts each)</div>
+        <div class="tags">
+          {% for kw in result.matched_medium %}
+          <span class="tag tag-med">{{ kw }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if result.matched_low %}
+      <div class="kw-section">
+        <div class="kw-label low-label">🟡 LOW RISK (×1 pt each)</div>
+        <div class="tags">
+          {% for kw in result.matched_low %}
+          <span class="tag tag-low">{{ kw }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if not result.matched_high and not result.matched_medium and not result.matched_low %}
+      <p class="muted">No suspicious keywords detected.</p>
+      {% endif %}
+    </div>
+
+    <!-- URLS -->
+    {% if result.all_urls %}
+    <div class="card">
+      <h2>🔗 URLs Found in Message</h2>
+      <ul class="url-list">
+        {% for url in result.all_urls %}
+        <li class="{{ 'url-suspicious' if url in result.suspicious_urls else 'url-ok' }}">
+          {{ '⚠️ SUSPICIOUS' if url in result.suspicious_urls else '✅ OK' }}
+          &nbsp;— <code>{{ url }}</code>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- ORIGINAL MESSAGE -->
+    <div class="card">
+      <h2>📄 Original Message</h2>
+      <div class="original-msg">{{ original_message }}</div>
+      <div class="msg-meta">
+        Word count: <strong>{{ result.word_count }}</strong> &nbsp;|&nbsp;
+        Exclamations: <strong>{{ result.urgency_signals.exclamations }}</strong> &nbsp;|&nbsp;
+        CAPS words: <strong>{{ result.urgency_signals.caps_words }}</strong>
+      </div>
+    </div>
+
+    <a href="/" class="btn btn-primary back-btn">← Analyze Another Message</a>
+
+  </main>
+
+  <footer class="footer">
+    <p>🛡️ ScamShield AI — Built with Python, Flask &amp; NLP &nbsp;|&nbsp; For educational purposes</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
